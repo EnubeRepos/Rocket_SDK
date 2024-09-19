@@ -10,12 +10,12 @@ import (
 )
 
 type Client struct {
-	token    Token
+	token    token
 	endpoint *url.URL
 	http     *http.Client
 }
 
-type Token struct {
+type token struct {
 	ExpiresAt        int       `json:"expiresAt"`
 	RefreshExpiresAt time.Time `json:"refreshExpiresAt"`
 	RefreshToken     string    `json:"refreshToken"`
@@ -37,6 +37,7 @@ func (c *Client) Login(user string, passwd string) error {
 
 	i, _ := json.Marshal(input)
 
+	c.endpoint.Path = "/api/v4/auth/login"
 	res, err := c.http.Post(c.endpoint.String(), "application/json", bytes.NewReader(i))
 	if err != nil {
 		return err
@@ -47,7 +48,7 @@ func (c *Client) Login(user string, passwd string) error {
 		return err
 	}
 
-	var token Token
+	var token token
 	err = json.Unmarshal(body, &token)
 	if err != nil {
 		return err
