@@ -9,17 +9,17 @@ import (
 )
 
 func main() {
-	e, _ := url.Parse("https://analytics.rocket.enube.me")
+	e, _ := url.Parse("https://analytics.rocket.enube.me/api/v4")
 
-	c, err := rocketsdkgo.Login(e, "username", "password")
+	c, err := rocketsdkgo.LoginAzure(e, "username", "password")
 	if err != nil {
 		log.Fatalf("Failed to log into client\n%s", err)
 	}
 
 	// Get usage of current month
-	usage, err := c.GetCurrentUsage()
+	usage, err := c.GetUsageCurrent()
 	if err != nil {
-		log.Fatal("Failed to get current usage\n%s", err)
+		log.Fatalf("Failed to get current usage\n%s", err)
 	}
 
 	log.Print(usage)

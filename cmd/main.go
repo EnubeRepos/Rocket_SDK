@@ -9,8 +9,10 @@ import (
 	"time"
 
 	rocketsdkgo "github.com/enuberepos/Rocket_SDK_Go"
-	"github.com/enuberepos/Rocket_SDK_Go/core"
+	"github.com/enuberepos/Rocket_SDK_Go/api"
 )
+
+// TODO: THIS NEEDS A WHOLE REFACTOR
 
 var (
 	user     = flag.String("user", os.Getenv("ROCKET_API_USER"), "The username used for login, defaults to ROCKET_API_USER environment variable")
@@ -34,12 +36,12 @@ func main() {
 		log.Fatalf("\"api\" is not a valid url!\n%s", err)
 	}
 
-	c, err := rocketsdkgo.Login(e, *user, *passwd)
+	c, err := rocketsdkgo.LoginAzure(e, *user, *passwd)
 	if err != nil {
 		log.Fatalf("Failed to log into client\n%s", err)
 	}
 
-	var usage []core.Usage
+	var usage api.Indicator
 
 	args := flag.Args()
 
@@ -67,7 +69,7 @@ func main() {
 			log.Fatalf("Failed to parse flag \"end\", not in valid date format\n%s", err)
 		}
 
-		usage, err = c.GetUsagePeriod(s, e)
+		usage, err = c.GetIndicatorsPeriod(s, e)
 		if err != nil {
 			log.Fatalf("Failed to get usage data due to\n%s", err)
 		}
@@ -84,14 +86,14 @@ func main() {
 			log.Fatalf("Failed to parse flag \"month\", not in valid date format\n%s", err)
 		}
 
-		usage, err = c.GetUsageMonth(m.Year(), m.Month())
+		_, err = c.GetUsageMonth(m.Year(), m.Month())
 		if err != nil {
 			log.Fatalf("Failed to get usage data due to\n%s", err)
 		}
 	case "get-usage-current":
 		_ = getUsageCurrent
 
-		usage, err = c.GetCurrentUsage()
+		_, err = c.GetUsageCurrent()
 		if err != nil {
 			log.Fatalf("Failed to get usage data due to\n%s", err)
 		}
