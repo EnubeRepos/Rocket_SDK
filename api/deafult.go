@@ -60,3 +60,23 @@ func (a *defaultApi) Login(user string, passwd string) error {
 	a.token = token
 	return nil
 }
+
+func (a *defaultApi) Usages(f UsageFilters) ([]Usage, error) {
+	a.endpoint.Path, _ = url.JoinPath(a.basepath, "usages")
+	return post[[]Usage](f, a.endpoint, a.token.Token)
+}
+
+func (a *defaultApi) Indicators(f UsageFilters) (Indicator, error) {
+	a.endpoint.Path, _ = url.JoinPath(a.basepath, "indicators")
+	return post[Indicator](f, a.endpoint, a.token.Token)
+}
+
+func (a *defaultApi) Resellers(f UsageFilters) ([]Reseller, error) {
+	a.endpoint.Path, _ = url.JoinPath(a.basepath, "resellers")
+	return post[[]Reseller](f, a.endpoint, a.token.Token)
+}
+
+func (a *defaultApi) CatalogTypes(f UsageFilters) ([]CatalogType, error) {
+	a.endpoint.Path, _ = url.JoinPath(a.basepath, "resellers")
+	return post[[]CatalogType](f, a.endpoint, a.token.Token)
+}
