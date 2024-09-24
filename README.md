@@ -5,6 +5,5 @@ The [Go](https://go.dev) Software Development Kit (SDK) for working with the Enu
 
 ## Developing
 
-This repository provides a [`makefile`](./makefile) with helper aliases for development.
-It mostly runs a provided CLI for development and testing purposes. Run `make run` or
-`make dev/cmd` to run the CLI with the environment variables setted from the `.env` file.
+This repository provides CLI for development and testing purposes. Run `go run ./cmd -help`
+for more information on how to use it.
