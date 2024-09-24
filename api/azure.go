@@ -9,6 +9,8 @@ type AzureAPI struct {
 }
 
 func NewAzureAPI(endpoint *url.URL, token Token) *AzureAPI {
+	e := *endpoint
+	endpoint = &e
 	basepath, _ := url.JoinPath(endpoint.Path, "azure")
 	authBasepath, _ := url.JoinPath(endpoint.Path, "auth")
 	api := defaultApi{

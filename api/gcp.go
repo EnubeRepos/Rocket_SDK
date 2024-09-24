@@ -9,6 +9,8 @@ type GcpAPI struct {
 }
 
 func NewGcpAPI(endpoint *url.URL, token Token) *GcpAPI {
+	e := *endpoint
+	endpoint = &e
 	basepath, _ := url.JoinPath(endpoint.Path, "gcp")
 	authBasepath, _ := url.JoinPath(endpoint.Path, "auth")
 	api := defaultApi{

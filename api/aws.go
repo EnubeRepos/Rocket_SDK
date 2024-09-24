@@ -9,6 +9,8 @@ type AwsAPI struct {
 }
 
 func NewAwsAPI(endpoint *url.URL, token Token) *AwsAPI {
+	e := *endpoint
+	endpoint = &e
 	basepath, _ := url.JoinPath(endpoint.Path, "aws")
 	authBasepath, _ := url.JoinPath(endpoint.Path, "auth")
 	api := defaultApi{
