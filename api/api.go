@@ -11,10 +11,16 @@ import (
 
 type API interface {
 	Login(user, passwd string) error
-	Usages(UsageFilters) ([]Usage, error)
+	ByCategory(UsageFilters) (Tree, error)
+	ByDay(UsageFilters) ([]Stack, error)
+	ByMonth(UsageFilters) ([]Stack, error)
+	ByPublisher(UsageFilters) ([]Stack, error)
+	ByResource(UsageFilters) ([]Usage, error)
+	ByTag(UsageFilters) (Tree, error)
+	CatalogTypes(UsageFilters) ([]CatalogType, error)
 	Indicators(UsageFilters) (Indicator, error)
 	Resellers(UsageFilters) ([]Reseller, error)
-	CatalogTypes(UsageFilters) ([]CatalogType, error)
+	Usages(UsageFilters) ([]Usage, error)
 }
 
 type KeyValuePair struct {

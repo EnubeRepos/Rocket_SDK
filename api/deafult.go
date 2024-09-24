@@ -61,30 +61,11 @@ func (a *defaultApi) Login(user string, passwd string) error {
 	return nil
 }
 
-func (a *defaultApi) Usages(f UsageFilters) ([]Usage, error) {
-	a.endpoint.Path, _ = url.JoinPath(a.basepath, "usages")
-	return post[[]Usage](f, a.endpoint, a.token.Token)
-}
-
-func (a *defaultApi) Indicators(f UsageFilters) (Indicator, error) {
-	a.endpoint.Path, _ = url.JoinPath(a.basepath, "indicators")
-	return post[Indicator](f, a.endpoint, a.token.Token)
-}
-
-func (a *defaultApi) Resellers(f UsageFilters) ([]Reseller, error) {
-	a.endpoint.Path, _ = url.JoinPath(a.basepath, "resellers")
-	return post[[]Reseller](f, a.endpoint, a.token.Token)
-}
-
-func (a *defaultApi) CatalogTypes(f UsageFilters) ([]CatalogType, error) {
-	a.endpoint.Path, _ = url.JoinPath(a.basepath, "resellers")
-	return post[[]CatalogType](f, a.endpoint, a.token.Token)
-}
-
 func (a *defaultApi) ByCategory(f UsageFilters) (Tree, error) {
 	a.endpoint.Path, _ = url.JoinPath(a.basepath, "by-category")
 	return post[Tree](f, a.endpoint, a.token.Token)
 }
+
 func (a *defaultApi) ByDay(f UsageFilters) ([]Stack, error) {
 	a.endpoint.Path, _ = url.JoinPath(a.basepath, "by-day")
 	return post[[]Stack](f, a.endpoint, a.token.Token)
@@ -108,4 +89,24 @@ func (a *defaultApi) ByResource(f UsageFilters) ([]Usage, error) {
 func (a *defaultApi) ByTag(f UsageFilters) (Tree, error) {
 	a.endpoint.Path, _ = url.JoinPath(a.basepath, "by-tag")
 	return post[Tree](f, a.endpoint, a.token.Token)
+}
+
+func (a *defaultApi) CatalogTypes(f UsageFilters) ([]CatalogType, error) {
+	a.endpoint.Path, _ = url.JoinPath(a.basepath, "resellers")
+	return post[[]CatalogType](f, a.endpoint, a.token.Token)
+}
+
+func (a *defaultApi) Indicators(f UsageFilters) (Indicator, error) {
+	a.endpoint.Path, _ = url.JoinPath(a.basepath, "indicators")
+	return post[Indicator](f, a.endpoint, a.token.Token)
+}
+
+func (a *defaultApi) Resellers(f UsageFilters) ([]Reseller, error) {
+	a.endpoint.Path, _ = url.JoinPath(a.basepath, "resellers")
+	return post[[]Reseller](f, a.endpoint, a.token.Token)
+}
+
+func (a *defaultApi) Usages(f UsageFilters) ([]Usage, error) {
+	a.endpoint.Path, _ = url.JoinPath(a.basepath, "usages")
+	return post[[]Usage](f, a.endpoint, a.token.Token)
 }
