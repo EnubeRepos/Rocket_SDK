@@ -21,14 +21,7 @@ type KeyValuePair struct {
 	Key   string `json:"key"`
 	Value string `json:"value"`
 }
-
-type LabelValuePair struct {
-	Label string `json:"label"`
-	Value string `json:"value"`
-}
-
 type KeyValueArray []KeyValuePair
-
 type Usage struct {
 	ID           string         `json:"id"`
 	ParentID     string         `json:"parent_id"`
@@ -43,7 +36,6 @@ type Usage struct {
 	Extra        map[string]any `json:"extra"`
 	Data         map[string]any `json:"-"`
 }
-
 type UsageFilters struct {
 	Filters KeyValueArray `json:"filters"`
 }
@@ -63,8 +55,26 @@ type Indicator struct {
 	ActualQuantity   float64  `json:"actual_quantity"`
 }
 
+type LabelValuePair struct {
+	Label string `json:"label"`
+	Value string `json:"value"`
+}
 type Reseller LabelValuePair
 type CatalogType LabelValuePair
+
+type Stack struct {
+	Label           string                 `json:"label"`
+	Value           float64                `json:"value"`
+	Type            string                 `json:"type"`
+	MarkupReference string                 `json:"markup_reference"`
+	Extra           map[string]interface{} `json:"extra"`
+}
+
+type Tree struct {
+	Name     string   `json:"name"`
+	Value    *float64 `json:"value,omitempty"`
+	Children []Tree   `json:"children,omitempty"`
+}
 
 func post[T any](filters UsageFilters, endpoint *url.URL, token string) (T, error) {
 	var resValue T

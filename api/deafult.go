@@ -80,3 +80,32 @@ func (a *defaultApi) CatalogTypes(f UsageFilters) ([]CatalogType, error) {
 	a.endpoint.Path, _ = url.JoinPath(a.basepath, "resellers")
 	return post[[]CatalogType](f, a.endpoint, a.token.Token)
 }
+
+func (a *defaultApi) ByCategory(f UsageFilters) (Tree, error) {
+	a.endpoint.Path, _ = url.JoinPath(a.basepath, "by-category")
+	return post[Tree](f, a.endpoint, a.token.Token)
+}
+func (a *defaultApi) ByDay(f UsageFilters) ([]Stack, error) {
+	a.endpoint.Path, _ = url.JoinPath(a.basepath, "by-day")
+	return post[[]Stack](f, a.endpoint, a.token.Token)
+}
+
+func (a *defaultApi) ByMonth(f UsageFilters) ([]Stack, error) {
+	a.endpoint.Path, _ = url.JoinPath(a.basepath, "by-month")
+	return post[[]Stack](f, a.endpoint, a.token.Token)
+}
+
+func (a *defaultApi) ByPublisher(f UsageFilters) ([]Stack, error) {
+	a.endpoint.Path, _ = url.JoinPath(a.basepath, "by-publisher")
+	return post[[]Stack](f, a.endpoint, a.token.Token)
+}
+
+func (a *defaultApi) ByResource(f UsageFilters) ([]Usage, error) {
+	a.endpoint.Path, _ = url.JoinPath(a.basepath, "by-publisher")
+	return post[[]Usage](f, a.endpoint, a.token.Token)
+}
+
+func (a *defaultApi) ByTag(f UsageFilters) (Tree, error) {
+	a.endpoint.Path, _ = url.JoinPath(a.basepath, "by-tag")
+	return post[Tree](f, a.endpoint, a.token.Token)
+}
