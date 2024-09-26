@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strconv"
 	"time"
 )
 
@@ -94,6 +95,27 @@ func (a *defaultApi) ByTag(f UsageFilters) (Tree, error) {
 func (a *defaultApi) CatalogTypes(f UsageFilters) ([]CatalogType, error) {
 	a.endpoint.Path, _ = url.JoinPath(a.basepath, "resellers")
 	return post[[]CatalogType](f, a.endpoint, a.token.Token)
+}
+
+func (a *defaultApi) DownloadReports(params ...PaginationParams) (Pages[Report, PaginationParams], error) {
+	a.endpoint.Path, _ = url.JoinPath(a.basepath, "download", "reports")
+	if len(params) > 0 {
+		p := params[0]
+		q := a.endpoint.Query()
+		if p.Limit != nil {
+			q.Add("limit", strconv.Itoa(*p.Limit))
+		}
+		if p.Offset != nil {
+			q.Add("offset", strconv.Itoa(*p.Limit))
+		}
+		a.endpoint.RawQuery = q.Encode()
+	}
+	return get[Pages[Report, PaginationParams]](a.endpoint, a.token.Token)
+}
+
+func (a *defaultApi) DownloadRequestReport(opt CreateReportOptions) (string, error) {
+	a.endpoint.Path, _ = url.JoinPath(a.basepath, "download", "request", "report")
+	return post[string](opt, a.endpoint, a.token.Token)
 }
 
 func (a *defaultApi) Indicators(f UsageFilters) (Indicator, error) {

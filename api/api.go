@@ -7,19 +7,29 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"time"
 )
 
 type API interface {
 	Login(user, passwd string) error
+
 	ByCategory(UsageFilters) (Tree, error)
 	ByDay(UsageFilters) ([]Stack, error)
 	ByMonth(UsageFilters) ([]Stack, error)
 	ByPublisher(UsageFilters) ([]Stack, error)
 	ByResource(UsageFilters) ([]Usage, error)
 	ByTag(UsageFilters) (Tree, error)
+
 	CatalogTypes(UsageFilters) ([]CatalogType, error)
+
+	DownloadReports(params ...PaginationParams)
+
+	DownloadRequestReport(CreateReportOptions) (string, error)
+
 	Indicators(UsageFilters) (Indicator, error)
+
 	Resellers(UsageFilters) ([]Reseller, error)
+
 	Usages(UsageFilters) ([]Usage, error)
 }
 
@@ -28,6 +38,12 @@ type KeyValuePair struct {
 	Value string `json:"value"`
 }
 type KeyValueArray []KeyValuePair
+
+type PaginationParams struct {
+	Limit  *int `json:"limit"`
+	Offset *int `json:"offset"`
+}
+
 type Usage struct {
 	ID           string         `json:"id"`
 	ParentID     string         `json:"parent_id"`
@@ -76,16 +92,78 @@ type Stack struct {
 	Extra           map[string]interface{} `json:"extra"`
 }
 
+type CreateReportOptions struct {
+	Emails    []string        `json:"emails"`
+	Type      string          `json:"type"`
+	Separator ReportSeparator `json:"separator"`
+	Filters   UsageFilters    `json:"filters"`
+}
+
+type ReportSeparator string
+
+const (
+	ReportSeparatorCOMMA     ReportSeparator = "COMMA"
+	ReportSeparatorCOLON     ReportSeparator = "COLON"
+	ReportSeparatorSEMICOLON ReportSeparator = "SEMICOLON"
+	ReportSeparatorDOT       ReportSeparator = "DOT"
+	ReportSeparatorPIPE      ReportSeparator = "PIPE"
+	ReportSeparatorTAB       ReportSeparator = "TAB"
+	ReportSeparatorSPACE     ReportSeparator = "SPACE"
+)
+
+type Pages[Item any, Metadata any] struct {
+	Metadata Metadata
+	Total    int
+	Items    []Item
+}
+
+type Report struct {
+	ID        string    `json:"id"`
+	Filename  string    `json:"filename"`
+	Type      string    `json:"type"`
+	Status    string    `json:"status"`
+	CreatedAt time.Time `json:"createdAt"`
+}
+
 type Tree struct {
 	Name     string   `json:"name"`
 	Value    *float64 `json:"value,omitempty"`
 	Children []Tree   `json:"children,omitempty"`
 }
 
-func post[T any](filters UsageFilters, endpoint *url.URL, token string) (T, error) {
-	var resValue T
+func get[Res any](endpoint *url.URL, token string) (Res, error) {
+	var resValue Res
 
-	body, err := json.Marshal(filters)
+	req, err := http.NewRequest(http.MethodGet, endpoint.String(), bytes.NewReader([]byte("")))
+	if err != nil {
+		return resValue, err
+	}
+
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", token))
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return resValue, err
+	}
+
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		return resValue, err
+	}
+
+	if res.StatusCode != http.StatusOK {
+		return resValue, fmt.Errorf("Non-200 code returned from api\ncode: %s\nbody:\n%s", res.Status, string(body))
+	}
+
+	err = json.Unmarshal(body, &resValue)
+	return resValue, err
+}
+
+func post[Res any, Req any](rb Req, endpoint *url.URL, token string) (Res, error) {
+	var resValue Res
+
+	body, err := json.Marshal(rb)
 	if err != nil {
 		return resValue, err
 	}
